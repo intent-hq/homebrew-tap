@@ -33,7 +33,7 @@ RUBY
 
 content = File.read(FORMULA)
 
-if content.include?("service do")
+if content.match?(/^\s*service do\s*$/)
   puts "service block already present in #{FORMULA} -- nothing to do"
   exit 0
 end
