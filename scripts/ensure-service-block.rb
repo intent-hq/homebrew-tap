@@ -14,7 +14,7 @@
 FORMULA = ARGV.fetch(0, File.expand_path("../Formula/intentd.rb", __dir__))
 
 # Mirrors intentd's own LaunchAgent plist (intentd/src/service.rs):
-# ProgramArguments = [intentd, serve, --listen, uds]; KeepAlive relaunches on
+# ProgramArguments = [intentd, serve, --resume-all]; KeepAlive relaunches on
 # crash but not on clean exit, so `brew services stop intentd` sticks.
 SERVICE_BLOCK = <<~RUBY
   # `brew services start intentd` runs the daemon under launchd/systemd:
@@ -22,9 +22,12 @@ SERVICE_BLOCK = <<~RUBY
   # KeepAlive mirrors intentd's own LaunchAgent plist: relaunch on crash,
   # but a clean exit (`brew services stop intentd`) does not relaunch.
   # The Intent desktop app auto-detects and connects to the brew-managed
-  # daemon on the default UDS socket.
+  # daemon on the default UDS socket. The WSS listener is governed by
+  # config.toml (server.wsApi.enabled), not by CLI flags. --resume-all
+  # auto-resumes interrupted agents, since this headless service has no
+  # desktop app attached to resume them manually.
   service do
-    run [opt_bin/"intentd", "serve", "--listen", "uds"]
+    run [opt_bin/"intentd", "serve", "--resume-all"]
     keep_alive crashed: true, successful_exit: false
     log_path var/"log/intentd.log"
     error_log_path var/"log/intentd.err.log"
