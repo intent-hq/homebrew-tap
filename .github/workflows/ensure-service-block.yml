@@ -1,0 +1,42 @@
+# Keeps the hand-maintained `service do ... end` block in Formula/intentd.rb.
+#
+# intentd's release CI regenerates and force-pushes the formula via cargo-dist
+# (`publish-jobs = ["homebrew"]`), which drops the service block. This workflow
+# runs on every change to the formula and idempotently re-inserts the block if
+# it is missing (no-op when present), committing the fix back to main.
+name: Ensure service block
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - Formula/intentd.rb
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ensure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Re-insert service block if missing
+        run: ruby scripts/ensure-service-block.rb
+
+      - name: Ruby syntax check
+        run: ruby -c Formula/intentd.rb
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- Formula/intentd.rb; then
+            echo "service block already present -- nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/intentd.rb
+          git commit -m "fix: re-insert brew services block after formula regeneration"
+          git push
