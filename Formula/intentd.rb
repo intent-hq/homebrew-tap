@@ -66,4 +66,20 @@ class Intentd < Formula
     # sample files.
     pkgshare.install(*leftover_contents) unless leftover_contents.empty?
   end
+
+  # `brew services start intentd` runs the daemon under launchd/systemd:
+  # it starts now and at every user login (boot-level start is out of scope).
+  # KeepAlive mirrors intentd's own LaunchAgent plist: relaunch on crash,
+  # but a clean exit (`brew services stop intentd`) does not relaunch.
+  # The Intent desktop app auto-detects and connects to the brew-managed
+  # daemon on the default UDS socket. The WSS listener is governed by
+  # config.toml (server.wsApi.enabled), not by CLI flags. --resume-all
+  # auto-resumes interrupted agents, since this headless service has no
+  # desktop app attached to resume them manually.
+  service do
+    run [opt_bin/"intentd", "serve", "--resume-all"]
+    keep_alive crashed: true, successful_exit: false
+    log_path var/"log/intentd.log"
+    error_log_path var/"log/intentd.err.log"
+  end
 end
