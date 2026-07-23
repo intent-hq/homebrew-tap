@@ -1,25 +1,25 @@
 class Intentd < Formula
   desc "Intent backend daemon — local-first JSON-RPC daemon for the Intent domain model"
   homepage "https://github.com/intent-hq/intentd"
-  version "0.2.0"
+  version "0.2.1"
   if OS.mac?
     if Hardware::CPU.arm?
-      url "https://github.com/intent-hq/intentd/releases/download/v0.2.0/intentd-aarch64-apple-darwin.tar.xz"
-      sha256 "49e1093144926adff7748532c47f4bbef01635625b5516b2973bb0f793d2bfdb"
+      url "https://github.com/intent-hq/intentd/releases/download/v0.2.1/intentd-aarch64-apple-darwin.tar.xz"
+      sha256 "bd597f02904872fbebc64ee4632d9d9c1bd73ed62e015a1d29ca547c25c6b44a"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/intent-hq/intentd/releases/download/v0.2.0/intentd-x86_64-apple-darwin.tar.xz"
-      sha256 "ca9ee7ac9f2b6576850cd7fa1eb1c45da0e8f5b8d6be5469ba9d21c38f46cef8"
+      url "https://github.com/intent-hq/intentd/releases/download/v0.2.1/intentd-x86_64-apple-darwin.tar.xz"
+      sha256 "31a0ca99e3f183d5bcb3695a4778a92b5846f6dbdaa47cda36d931fe582de956"
     end
   end
   if OS.linux?
     if Hardware::CPU.arm?
-      url "https://github.com/intent-hq/intentd/releases/download/v0.2.0/intentd-aarch64-unknown-linux-musl.tar.xz"
-      sha256 "e65ce3fc4aa608df59c1fe82fdca1d90b232af5026dc5dcab2d77b8a5b75c1cf"
+      url "https://github.com/intent-hq/intentd/releases/download/v0.2.1/intentd-aarch64-unknown-linux-musl.tar.xz"
+      sha256 "bbbd5824977d8b7295564e4abb9ec3d86908d2e6d49b009f7eae5caa4e60eda4"
     end
     if Hardware::CPU.intel?
-      url "https://github.com/intent-hq/intentd/releases/download/v0.2.0/intentd-x86_64-unknown-linux-musl.tar.xz"
-      sha256 "eac9532fac30847865134260aa9045f5159eca3a9c374b3ff1cb16d87deec4ed"
+      url "https://github.com/intent-hq/intentd/releases/download/v0.2.1/intentd-x86_64-unknown-linux-musl.tar.xz"
+      sha256 "ba13e7152afbc421a1b156b2bd1f35f80df8062c8e80d91af2898061bb7c3ee5"
     end
   end
 
@@ -65,21 +65,5 @@ class Intentd < Formula
     # Install any leftover files in pkgshare; these are probably config or
     # sample files.
     pkgshare.install(*leftover_contents) unless leftover_contents.empty?
-  end
-
-  # `brew services start intentd` runs the daemon under launchd/systemd:
-  # it starts now and at every user login (boot-level start is out of scope).
-  # KeepAlive mirrors intentd's own LaunchAgent plist: relaunch on crash,
-  # but a clean exit (`brew services stop intentd`) does not relaunch.
-  # The Intent desktop app auto-detects and connects to the brew-managed
-  # daemon on the default UDS socket. The WSS listener is governed by
-  # config.toml (server.wsApi.enabled), not by CLI flags. --resume-all
-  # auto-resumes interrupted agents, since this headless service has no
-  # desktop app attached to resume them manually.
-  service do
-    run [opt_bin/"intentd", "serve", "--resume-all"]
-    keep_alive crashed: true, successful_exit: false
-    log_path var/"log/intentd.log"
-    error_log_path var/"log/intentd.err.log"
   end
 end
