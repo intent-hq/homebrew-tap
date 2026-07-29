@@ -7,6 +7,11 @@
 # The archives ship the sitter — a self-updating supervisor shim renamed to
 # `intentd` — which downloads, verifies, and runs the real daemon, forwarding
 # all CLI args verbatim.
+#
+# Download URLs point at the public intent-hq/intentd-releases mirror (the
+# temporary public home for release assets until intent-hq/intentd is
+# open-sourced); release-sitter.yml mirrors the identical archives there, so
+# the sha256s computed from the built artifacts still match.
 class Intentd < Formula
   desc "Self-updating supervisor shim for the Intent backend daemon"
   homepage "https://github.com/intent-hq/intentd"
@@ -15,11 +20,11 @@ class Intentd < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/intent-hq/intentd/releases/download/sitter-v0.1.0/intentd-aarch64-apple-darwin.tar.xz"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.0/intentd-aarch64-apple-darwin.tar.xz"
       sha256 "ddc880d411d081a45fc2a38338e56d6a5eed46806d91bae38f4fd143e5d71714"
     end
     on_intel do
-      url "https://github.com/intent-hq/intentd/releases/download/sitter-v0.1.0/intentd-x86_64-apple-darwin.tar.xz"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.0/intentd-x86_64-apple-darwin.tar.xz"
       sha256 "c29907b792965de7a435818502b1ec3057ae51c00e6d29c4800801553c84f583"
     end
   end
@@ -28,11 +33,11 @@ class Intentd < Formula
   # host regardless of glibc version.
   on_linux do
     on_arm do
-      url "https://github.com/intent-hq/intentd/releases/download/sitter-v0.1.0/intentd-aarch64-unknown-linux-musl.tar.xz"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.0/intentd-aarch64-unknown-linux-musl.tar.xz"
       sha256 "5edf282739486ee9d0a8d2f12fdb01567aa934971f97880332fa611ed048e164"
     end
     on_intel do
-      url "https://github.com/intent-hq/intentd/releases/download/sitter-v0.1.0/intentd-x86_64-unknown-linux-musl.tar.xz"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.0/intentd-x86_64-unknown-linux-musl.tar.xz"
       sha256 "c696aa470070a311cc6f778e040a6bec6542934d334931cdc506ae934e2cfcd7"
     end
   end
