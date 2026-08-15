@@ -1,7 +1,7 @@
 # Hand-maintained template for the `intentd` Homebrew formula, rendered by
 # scripts/render-sitter-homebrew-formula.sh and pushed to
 # intent-hq/homebrew-tap by .github/workflows/release-sitter.yml (replacing
-# the cargo-dist generated daemon formula). Placeholders: 0.1.4 and the
+# the cargo-dist generated daemon formula). Placeholders: 0.1.5 and the
 # four {{SHA256_*}} values, computed from the built release archives.
 #
 # The archives ship the sitter — a self-updating supervisor shim renamed to
@@ -15,17 +15,17 @@
 class Intentd < Formula
   desc "Self-updating supervisor shim for the Intent backend daemon"
   homepage "https://github.com/intent-hq/intentd"
-  version "0.1.4"
+  version "0.1.5"
   license "Apache-2.0"
 
   on_macos do
     on_arm do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.4/intentd-aarch64-apple-darwin.tar.xz"
-      sha256 "0b1277c1433032bdbb5931f522c01963a312c3f00d0f6b48ea8855eedd6d8e7e"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-aarch64-apple-darwin.tar.xz"
+      sha256 "6c5fc4e8fd420652fb63811d96702b78fea681d8498a6606d02416dec2c26d73"
     end
     on_intel do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.4/intentd-x86_64-apple-darwin.tar.xz"
-      sha256 "1cc5fb51aa13431761686ff6bb6d11a3f543741e06ed4307604971bd4a2d4ae4"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-x86_64-apple-darwin.tar.xz"
+      sha256 "a98f6d85aa08b2265474d5fa9728e2fe393157cd9ff93d9be781853651f3c681"
     end
   end
 
@@ -33,12 +33,12 @@ class Intentd < Formula
   # host regardless of glibc version.
   on_linux do
     on_arm do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.4/intentd-aarch64-unknown-linux-musl.tar.xz"
-      sha256 "71b502989a7b7798c63a99d9bc1bb2ac7ba758fda64019705eea40f69f4f4d03"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-aarch64-unknown-linux-musl.tar.xz"
+      sha256 "36399b5b8adf99f8bad44d6b9b4ab0db5c55d199b8436ececb73424fd6b5f951"
     end
     on_intel do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.4/intentd-x86_64-unknown-linux-musl.tar.xz"
-      sha256 "66a8737bf584799b14d2e19b14e904e78a03aee4270aea07d4c05085c9c17fe1"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-x86_64-unknown-linux-musl.tar.xz"
+      sha256 "add822a364a3070bb8863b48cfcb92d9309593aa741ace43fd7b31ef06580db3"
     end
   end
 
@@ -51,11 +51,17 @@ class Intentd < Formula
   # The sitter supervises the daemon itself (updates + crash respawn);
   # keep_alive covers the sitter process: relaunch on crash, but a clean exit
   # (`brew services stop intentd`, or a clean daemon shutdown the sitter
-  # mirrors with exit 0) does not relaunch. --resume-all auto-resumes
-  # interrupted agents, since this headless service has no desktop app
-  # attached to resume them manually.
+  # mirrors with exit 0) does not relaunch. Startup auto-resume of interrupted
+  # agents is governed by the agents.resumeInterruptedOnStart setting (default
+  # auto: resume only on headless hosts, so servers keep resuming while desktop
+  # hosts leave it to the app's prompt) — toggle it with
+  # `intentd settings agents.resumeInterruptedOnStart on|off`. Note: on Linux
+  # the brew service is a systemd user unit that runs without the session's
+  # DISPLAY/WAYLAND_DISPLAY, so `auto` treats it as headless and resumes even
+  # on a desktop (use `off` to opt out); macOS launchd agents count as having
+  # a display.
   service do
-    run [opt_bin/"intentd", "serve", "--resume-all"]
+    run [opt_bin/"intentd", "serve"]
     keep_alive crashed: true, successful_exit: false
     log_path var/"log/intentd.log"
     error_log_path var/"log/intentd.err.log"
