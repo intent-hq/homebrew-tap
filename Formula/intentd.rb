@@ -1,7 +1,7 @@
 # Hand-maintained template for the `intentd` Homebrew formula, rendered by
 # scripts/render-sitter-homebrew-formula.sh and pushed to
 # intent-hq/homebrew-tap by .github/workflows/release-sitter.yml (replacing
-# the cargo-dist generated daemon formula). Placeholders: 0.1.5 and the
+# the cargo-dist generated daemon formula). Placeholders: 0.1.6 and the
 # four {{SHA256_*}} values, computed from the built release archives.
 #
 # The archives ship the sitter — a self-updating supervisor shim renamed to
@@ -15,17 +15,17 @@
 class Intentd < Formula
   desc "Self-updating supervisor shim for the Intent backend daemon"
   homepage "https://github.com/intent-hq/intentd"
-  version "0.1.5"
+  version "0.1.6"
   license "Apache-2.0"
 
   on_macos do
     on_arm do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-aarch64-apple-darwin.tar.xz"
-      sha256 "6c5fc4e8fd420652fb63811d96702b78fea681d8498a6606d02416dec2c26d73"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.6/intentd-aarch64-apple-darwin.tar.xz"
+      sha256 "df2b6712a1d150d1929bdaae48e0cc9fc84a56a0227660518fa25d5e041ffb4a"
     end
     on_intel do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-x86_64-apple-darwin.tar.xz"
-      sha256 "a98f6d85aa08b2265474d5fa9728e2fe393157cd9ff93d9be781853651f3c681"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.6/intentd-x86_64-apple-darwin.tar.xz"
+      sha256 "df89b4df113aab7c953265fc36403354f55724df939cf6185ea0c23e9044bb9f"
     end
   end
 
@@ -33,12 +33,12 @@ class Intentd < Formula
   # host regardless of glibc version.
   on_linux do
     on_arm do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-aarch64-unknown-linux-musl.tar.xz"
-      sha256 "36399b5b8adf99f8bad44d6b9b4ab0db5c55d199b8436ececb73424fd6b5f951"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.6/intentd-aarch64-unknown-linux-musl.tar.xz"
+      sha256 "aa9983299df2986a94bec75e5f9d8fe35263610d4907db7a55650266f5dae4cf"
     end
     on_intel do
-      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.5/intentd-x86_64-unknown-linux-musl.tar.xz"
-      sha256 "add822a364a3070bb8863b48cfcb92d9309593aa741ace43fd7b31ef06580db3"
+      url "https://github.com/intent-hq/intentd-releases/releases/download/sitter-v0.1.6/intentd-x86_64-unknown-linux-musl.tar.xz"
+      sha256 "cd81529f5887e89b0fac51f36b61b41a57dbeaaca0898c208eccd94da9a8a98e"
     end
   end
 
